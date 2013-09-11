@@ -24,10 +24,12 @@ class Handler(object):
             source = event.target
 
         if self.default is not None:
+            logging.debug("Executing default command")
             self.default(connection, event)
 
-        for funct in self.registered:
-            if funct[0] == command:
-                funct[1](connection, source, args)
-                return True
+        if event.arguments[0][0] == '.':
+            for funct in self.registered:
+                if funct[0] == command:
+                    funct[1](connection, source, args)
+                    return True
         return False

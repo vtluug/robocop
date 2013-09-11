@@ -4,7 +4,6 @@ Robocop!
 """
 
 import logging
-import time
 
 import irc.bot
 import irc.client
@@ -88,35 +87,34 @@ class Robocop(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, connection, event):
         logging.debug(', '.join([event.type, event.source.nick, event.source.userhost, event.source.host, event.source.user, event.target]))
 
-        now = time.time()
-        if self.rl_cooldown < now - 30:
-            self.ratelimit.append((event.source.nick, now))
+#        now = time.time()
+#        if self.rl_cooldown < now - 30:
+#            self.ratelimit.append((event.source.nick, now))
+#
+#            while len(self.ratelimit) > 0 and self.ratelimit[0][1] < now - 10:
+#                self.ratelimit.pop(0)
+#            count = len([nick for nick in self.ratelimit if nick[0] == event.source.nick])
+#            if count >= 4:
+#                connection.privmsg(config.opchannel, "%s tripped flood guard." % (event.source.nick))
+#                self.rl_cooldown = now
+#                fakeevent = irc.client.Event("fake", config.nickname, config.opchannel, arguments=[".mute %s %d Automatic flood control" %(event.source.nick, 5)])
+#                print(fakeevent.arguments)
+#                logging.debug("Generated fake event")
+#                self.ophandler.handle(connection, fakeevent)
+#                logging.debug("Muted offender")
+#            elif len(self.ratelimit) > 10:
+#                connection.privmsg(config.opchannel, "General flood warning!")
+#                self.rl_cooldown = now
 
-            while len(self.ratelimit) > 0 and self.ratelimit[0][1] < now - 10:
-                self.ratelimit.pop(0)
-            count = len([nick for nick in self.ratelimit if nick[0] == event.source.nick])
-            if count >= 4:
-                connection.privmsg(config.opchannel, "%s tripped flood guard." % (event.source.nick))
-                self.rl_cooldown = now
-                fakeevent = irc.client.Event("fake", config.nickname, config.opchannel, arguments=[".mute %s %d Automatic flood control" %(event.source.nick, 5)])
-                print(fakeevent.arguments)
-                logging.debug("Generated fake event")
-                self.ophandler.handle(connection, fakeevent)
-                logging.debug("Muted offender")
-            elif len(self.ratelimit) > 10:
-                connection.privmsg(config.opchannel, "General flood warning!")
-                self.rl_cooldown = now
-
-        if event.arguments[0][0] == '.':
-            if event.target == config.modchannel:
-                self.modhandler.handle(connection, event)
-            elif event.target == config.opchannel:
-                self.ophandler.handle(connection, event)
+        if event.target == config.modchannel:
+            self.modhandler.handle(connection, event)
+        elif event.target == config.opchannel:
+            self.ophandler.handle(connection, event)
 
 
 def main():
-    #logging.basicConfig(filename="robocop.log", level=logging.DEBUG)
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(filename="robocop.log", level=logging.INFO)
+    #logging.basicConfig(level=logging.DEBUG)
     global robocop
     try:
         robocop = Robocop()

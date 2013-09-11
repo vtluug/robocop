@@ -2,6 +2,10 @@
 # - means infinite time
 
 import logging
+import time
+
+import irc.bot
+import irc.client
 
 import config
 import templates
@@ -293,7 +297,7 @@ def flood_control(connection, event):
         if count >= 4:
             connection.privmsg(config.opchannel, "%s tripped flood guard." % (event.source.nick))
             robocop.rl_cooldown = now
-            fakeevent = irc.client.Event("fake", config.nickname, config.opchannel, arguments=[".mute %s %d Automatic flood control" %(event.source.nick, 5)])
+            fakeevent = irc.client.Event("fake", config.nickname, config.opchannel, arguments=[".mute %s %d Automatic flood control" %(event.source.nick, 1)])
             logging.debug(fakeevent.arguments)
             logging.debug("Generated fake event")
             robocop.ophandler.handle(connection, fakeevent)
@@ -303,6 +307,7 @@ def flood_control(connection, event):
             robocop.rl_cooldown = now
 
 modchannel = [
+    ('.ack'     , ack)
 ]
 modchannel_default = flood_control
 opchannel = [

@@ -274,7 +274,7 @@ def commands(connection, source, args):
     connection.privmsg(config.opchannel, ", ".join(commands))
 
 def join(connection, source, args):
-    pass
+    connection.join(args)
 
 def op(connection, source, args):
     connection.privmsg("ChanServ", "op %s" % (config.modchannel))

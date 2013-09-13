@@ -65,11 +65,13 @@ class Robocop(irc.bot.SingleServerIRCBot):
 
     def on_welcome(self, connection, event):
         logging.debug("Connecting to channels")
-        connection.join(config.modchannel)
-        connection.join(config.opchannel)
-        logging.debug("Connected to channels")
         connection.privmsg("NickServ", "identify %s %s" % (config.password, config.nickname))
+        logging.debug("Identifiying...")
+        connection.privmsg("ChanServ", "invite %s" % (config.opchannel))
+        connection.join(config.modchannel)
         connection.privmsg("ChanServ", "op %s" % (config.modchannel))
+        logging.debug("Connected to channels")
+        connection.join(config.opchannel)
         logging.debug("Identified and opped on mod channel")
 
     def on_privmsg(self, connection, event):
@@ -113,7 +115,7 @@ class Robocop(irc.bot.SingleServerIRCBot):
 
 
 def main():
-    logging.basicConfig(filename="robocop.log", level=logging.INFO)
+    logging.basicConfig(filename="robocop.log", level=logging.DEBUG)
     #logging.basicConfig(level=logging.DEBUG)
     global robocop
     try:

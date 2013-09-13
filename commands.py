@@ -100,9 +100,11 @@ def mute(connection, channel, args):
         logging.info("Muting %s" % (nick))
         if delay == '-':
             connection.mode(config.modchannel, "+q %s" % (nick))
+            connection.mode(config.modchannel, "-v %s" % (nick))
             connection.privmsg(config.modchannel, "%s: %s" % (nick, reason))
         else:
             connection.mode(config.modchannel, "+q %s" % (nick))
+            connection.mode(config.modchannel, "-v %s" % (nick))
             connection.privmsg(config.modchannel, "%s: %s (%d minutes)" % (nick, reason, delay))
             if config.debug:
                 robocop.ircobj.execute_delayed(delay, delay_unmute, arguments=(connection, nick,))

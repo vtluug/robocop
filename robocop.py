@@ -113,6 +113,9 @@ class Robocop(irc.bot.SingleServerIRCBot):
         elif event.target == config.opchannel:
             self.ophandler.handle(connection, event)
 
+    def get_version(self):
+        return "Robocop 0.l.2"
+
 
 def main():
     logging.basicConfig(filename="robocop.log", level=logging.DEBUG)

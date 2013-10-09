@@ -293,10 +293,10 @@ def flood_control(connection, event):
     if robocop.rl_cooldown < now - 30:
         robocop.ratelimit.append((event.source.nick, now))
 
-        while len(robocop.ratelimit) > 0 and robocop.ratelimit[0][1] < now - 10:
+        while len(robocop.ratelimit) > 0 and robocop.ratelimit[0][1] < now - 14:
             robocop.ratelimit.pop(0)
         count = len([nick for nick in robocop.ratelimit if nick[0] == event.source.nick])
-        if count >= 4:
+        if count >= 6:
             connection.privmsg(config.opchannel, "%s tripped flood guard." % (event.source.nick))
             robocop.rl_cooldown = now
             fakeevent = irc.client.Event("fake", config.nickname, config.opchannel, arguments=[".mute %s %d Automatic flood control" %(event.source.nick, 1)])

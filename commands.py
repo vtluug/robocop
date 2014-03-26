@@ -205,6 +205,27 @@ def kick(connection, source, args):
         connection.kick(config.modchannel, nick, comment=reason)
     return True
 
+### Pm a user
+def pm(connection, source, args)
+    logging.debug("pm called")
+    nick, sep, reason = args.partition(' ')
+    nick = nick.strip()
+    reason = reason.strip()
+    if nick == '' or reason == '':
+        logging.debug("pm passed invalid parameters")
+        connection.privmsg(config.opchannel, "Usage: .pm <nick> [reason | %template]")
+    else:
+        print(reason)
+        if reason[0] == '%':
+            try:
+                reason = robocop.templates.get_template(reason)
+            except:
+                connection.privmsg(config.opchannel, "Error retrieving template %s" % (reason))
+                return False
+        logging.info("PMing %s: %s" % (nick, reason))
+        connection.privmsg(nick, reason)
+    return True
+
 def ack(connection, source, args):
     logging.debug("Ack called")
     nick = args.strip()
@@ -328,6 +349,7 @@ opchannel = [
     ('.ack'     , ack),
     ('.commands', commands),
     ('.help'    , commands),
+    ('.pm'      , pm),
 ]
 opchannel_default = None
 

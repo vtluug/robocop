@@ -206,7 +206,7 @@ def kick(connection, source, args):
     return True
 
 ### Pm a user
-def pm(connection, source, args)
+def pm(connection, source, args):
     logging.debug("pm called")
     nick, sep, reason = args.partition(' ')
     nick = nick.strip()
